@@ -49,6 +49,9 @@ void TargetLaneNode::imageCallback(const sensor_msgs::ImageConstPtr& image)
 
 		getRosParamForUpdate();
 		steer_control_value_ = laneDetecting();
+		//state_cpp_msg::MissionPlannerFeedback feedback;
+		//feedback.steer = steer_control_value_; //feedback name is steer and type should be double.
+		//as_.publishFeedback(feedback);
 		ackermann_msgs::AckermannDriveStamped control_msg = makeControlMsg();
 		control_pub_.publish(control_msg);
 	}
