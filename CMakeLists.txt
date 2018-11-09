@@ -13,12 +13,12 @@ find_package(catkin REQUIRED COMPONENTS
 	cv_bridge
 	OpenCV REQUIRED
 	roscpp
-    	std_msgs
+	std_msgs
 	sensor_msgs
 	image_transport
 	actionlib_msgs
 	actionlib
-	car_tracking
+	#car_tracking
 )
 
 #find_package(OpenCV 3 REQUIRED)
