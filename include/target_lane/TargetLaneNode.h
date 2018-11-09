@@ -11,8 +11,8 @@
 #include <sensor_msgs/image_encodings.h>
 #include <ackermann_msgs/AckermannDriveStamped.h>
 #include <signal.h>
-#include "state_cpp_msg/MissionPlannerAction.h"
 #include <actionlib/server/simple_action_server.h>
+#include <car_tracking/car_trackingAction.h>
 
 #ifndef TARGETLANENODE_H
 #define TARGETLANENODE_H
@@ -39,7 +39,7 @@ class TargetLaneNode
 		 *
 		 */
 		void imageCallback(const sensor_msgs::ImageConstPtr& image);
-		void actionCallback(const state_cpp_msg::MissionPlannerGoalConstPtr& goal);
+		void actionCallback(const car_tracking::car_trackingGoalConstPtr& goal);
 
 	protected:
 		/**
@@ -59,7 +59,7 @@ class TargetLaneNode
 		 * @brief make control message
 		 *
 		 */
-		ackermann_msgs::AckermannDriveStamped makeControlMsg();
+		//ackermann_msgs::AckermannDriveStamped makeControlMsg();
 
 		/**
 		 * @brief lane detecting wrapper
@@ -72,13 +72,12 @@ class TargetLaneNode
 		ros::NodeHandle nh_;
 		ros::Publisher control_pub_;	// Controll 메시지를 Publish하는 Publisher
 		ros::Subscriber image_sub_;		// 가공되지 않은 raw image 메시지를 Subscribe하는 Subscriber
-		actionlib::SimpleActionServer<state_cpp_msg::MissionPlannerAction> as_;
+		actionlib::SimpleActionServer<car_tracking::car_trackingAction> as_;
 
 		bool mission_start = false;
 		bool mission_cleared = false;
 
-		int throttle_ = 0;
-		int steer_control_value_= 0;
+		int steer_control_value = 0;
 		double angle_factor_ = 0.7;
 		uchar steer_height = 70;
 		bool u_turn;

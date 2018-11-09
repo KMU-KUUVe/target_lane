@@ -10,14 +10,14 @@ TargetLaneNode::TargetLaneNode()
 	as_.start();
 
 	/* if NodeHangle("~"), then (write -> /lane_detector/write)	*/
-	control_pub_ = nh_.advertise<ackermann_msgs::AckermannDriveStamped>("ackermann", 10);
+	//control_pub_ = nh_.advertise<ackermann_msgs::AckermannDriveStamped>("ackermann", 10);
 	image_sub_ = nh_.subscribe("/usb_cam/image_raw", 1, &TargetLaneNode::imageCallback, this);
 
 	getRosParamForUpdate();
 }
 
 
-void TargetLaneNode::actionCallback(const state_cpp_msg::MissionPlannerGoalConstPtr& goal)
+void TargetLaneNode::actionCallback(const car_tracking::car_trackingGoalConstPtr& goal)
 {
 	cout << "lane detector actioniCallback called" << endl;
 	mission_start = true;
@@ -36,7 +36,7 @@ void TargetLaneNode::actionCallback(const state_cpp_msg::MissionPlannerGoalConst
 }
 
 void TargetLaneNode::imageCallback(const sensor_msgs::ImageConstPtr& image)
-{	
+{
 	if(!mission_start){
 		try{
 			parseRawimg(image, frame);
@@ -48,31 +48,19 @@ void TargetLaneNode::imageCallback(const sensor_msgs::ImageConstPtr& image)
 		}
 
 		getRosParamForUpdate();
-		steer_control_value_ = laneDetecting();
-		//state_cpp_msg::MissionPlannerFeedback feedback;
-		//feedback.steer = steer_control_value_; //feedback name is steer and type should be double.
-		//as_.publishFeedback(feedback);
-		ackermann_msgs::AckermannDriveStamped control_msg = makeControlMsg();
-		control_pub_.publish(control_msg);
+		steer_control_value = laneDetecting();
+		car_tracking::car_trackingFeedback feedback;
+		feedback.tracking_feedback = steer_control_value; //feedback name is steer and type should be double.
+		as_.publishFeedback(feedback);
 	}
 }
 
 
 void TargetLaneNode::getRosParamForUpdate()
 {
-	nh_.getParam("throttle", throttle_);
-	nh_.getParam("angle_factor", angle_factor_);
+	//nh_.getParam("throttle", throttle_);
+	//nh_.getParam("angle_factor", angle_factor_);
 }
-
-
-ackermann_msgs::AckermannDriveStamped TargetLaneNode::makeControlMsg()
-{
-	ackermann_msgs::AckermannDriveStamped control_msg;
-	control_msg.drive.steering_angle = steer_control_value_;
-	control_msg.drive.speed = throttle_;
-	return control_msg;
-}
-
 
 int TargetLaneNode::laneDetecting()
 {
@@ -105,9 +93,7 @@ int TargetLaneNode::laneDetecting()
 	double ms = (t2 - t1) * 1000 / getTickFrequency();
 	sum += ms;
 	avg = sum / (double)frame_count;
-	//cout << "it took :  " << ms << "ms." << "average_time : " << avg << " frame per second (fps) : " << 1000 / avg << endl;
 	waitKey(3);
-	//ROS_INFO("it took : %6.2f [ms].  average_time : %6.2f [ms].  frame per second (fps) : %6.2f [frame/s].   steer angle : %5.2f [deg]\n", ms, avg, 1000 / avg , angle);
 
 	return angle * angle_factor_;
 }
@@ -124,5 +110,3 @@ void TargetLaneNode::parseRawimg(const sensor_msgs::ImageConstPtr& ros_img, cv::
 		throw std::runtime_error("frame is empty!");
 	}
 }
-
-
