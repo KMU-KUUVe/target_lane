@@ -13,11 +13,12 @@ find_package(catkin REQUIRED COMPONENTS
 	cv_bridge
 	OpenCV REQUIRED
 	roscpp
-    std_msgs
+    	std_msgs
 	sensor_msgs
 	image_transport
 	actionlib_msgs
 	actionlib
+	car_tracking
 )
 
 #find_package(OpenCV 3 REQUIRED)
@@ -78,10 +79,10 @@ include_directories(
 # )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#	 DIRECTORY action
-#	 FILES MissionPlanner.action
-# )
+ add_action_files(
+	 DIRECTORY action
+	 FILES car_tracking.action
+ )
 
 ## Generate added messages and services with any dependencies listed here
  generate_messages(

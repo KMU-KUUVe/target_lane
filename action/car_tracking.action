@@ -1,0 +1,8 @@
+# Define the goal
+int32 tracking_goal  
+---
+# Define the result
+int32 tracking_result
+---
+# Define a feedback message
+int32 tracking_feedback

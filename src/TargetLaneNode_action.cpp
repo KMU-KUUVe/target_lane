@@ -26,7 +26,7 @@ void TargetLaneNode::actionCallback(const car_tracking::car_trackingGoalConstPtr
 
 	while(ros::ok()){
 		if(mission_cleared){
-			state_cpp_msg::MissionPlannerResult result;
+			car_tracking::car_trackingResult result;
 			as_.setSucceeded(result);
 			mission_start = false;
 			break;
