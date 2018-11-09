@@ -11,12 +11,7 @@
 	</node>
 
     <!-- target_lane-->
-	<node pkg="target_lane" type="target_lane" name="target_lane">
-		<!-- scale platform -->
-		<param name="throttle" value="3" />
-		<param name="angle_factor" type="double" value="1.0" />
-		<remap from="/lane_detector/ackermann" to="ackermann" />
-	</node>
+	<node pkg="target_lane" type="target_lane" name="target_lane"/ >
 
     <!-- platform_control-->
     <!--<node pkg="platform_control" type="write_serial" name="write_serial" />-->
