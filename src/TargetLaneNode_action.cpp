@@ -11,7 +11,6 @@ TargetLaneNode::TargetLaneNode()
 
 	/* if NodeHangle("~"), then (write -> /lane_detector/write)	*/
 	//control_pub_ = nh_.advertise<ackermann_msgs::AckermannDriveStamped>("ackermann", 10);
-	image_sub_ = nh_.subscribe("/usb_cam/image_raw", 1, &TargetLaneNode::imageCallback, this);
 
 	getRosParamForUpdate();
 }
@@ -20,6 +19,7 @@ TargetLaneNode::TargetLaneNode()
 void TargetLaneNode::actionCallback(const car_tracking::car_trackingGoalConstPtr& goal)
 {
 	cout << "lane detector actioniCallback called" << endl;
+	image_sub_ = nh_.subscribe("/usb_cam/image_raw", 1, &TargetLaneNode::imageCallback, this);
 	mission_start = true;
 
 	ros::Rate r(10);
