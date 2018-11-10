@@ -25,9 +25,9 @@ void TargetLaneNode::actionCallback(const car_tracking::car_trackingGoalConstPtr
 	ros::Rate r(10);
 
 	while(ros::ok()){
-		if(mission_cleared){
-			car_tracking::car_trackingResult result;
-			as_.setSucceeded(result);
+		if(as_.isPreemptRequested()){
+			ROS_INFO("Target_Lane Preempted");
+			as_setPreempted();
 			mission_start = false;
 			break;
 		}
@@ -37,7 +37,7 @@ void TargetLaneNode::actionCallback(const car_tracking::car_trackingGoalConstPtr
 
 void TargetLaneNode::imageCallback(const sensor_msgs::ImageConstPtr& image)
 {
-	if(!mission_start){
+	if(mission_start){
 		try{
 			parseRawimg(image, frame);
 		} catch(const cv_bridge::Exception& e) {
@@ -82,13 +82,7 @@ int TargetLaneNode::laneDetecting()
 	//imshow("img_denoise", img_denoise);
 
 	double angle = targetlane.steer_control(img_denoise, steer_height, 12, left_x, right_x, img_mask, zero_count);
-	if(zero_count > 1500){
-		mission_cleared= true;
-	}
-	else{
-		mission_cleared = false;
-	}
-
+	
 	int64 t2 = getTickCount();
 	double ms = (t2 - t1) * 1000 / getTickFrequency();
 	sum += ms;
