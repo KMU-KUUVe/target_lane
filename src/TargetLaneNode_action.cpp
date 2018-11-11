@@ -27,7 +27,7 @@ void TargetLaneNode::actionCallback(const car_tracking::car_trackingGoalConstPtr
 	while(ros::ok()){
 		if(as_.isPreemptRequested()){
 			ROS_INFO("Target_Lane Preempted");
-			as_setPreempted();
+			as_.setPreempted();
 			mission_start = false;
 			break;
 		}
