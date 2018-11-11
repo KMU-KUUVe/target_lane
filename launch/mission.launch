@@ -1,4 +1,4 @@
 <launch>
     <!-- target_lane-->
-	<node pkg="target_lane" type="target_lane" name="target_lane"/ >
+	<node pkg="target_lane" type="target_lane" name="target_lane" />
 </launch>
