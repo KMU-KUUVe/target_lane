@@ -29,6 +29,7 @@ void TargetLaneNode::actionCallback(const car_tracking::car_trackingGoalConstPtr
 			ROS_INFO("Target_Lane Preempted");
 			as_.setPreempted();
 			mission_start = false;
+			destroyAllWindows();
 			break;
 		}
 		r.sleep();
