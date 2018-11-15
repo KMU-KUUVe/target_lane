@@ -116,7 +116,7 @@ cv::Mat TargetLane::mask(cv::Mat frame) {
  *@param turn is the output string containing the turn information
  *@return The function returns a 0
  */
- double TargetLane::steer_control(Mat denoise, int height_percent, int judging_line, int &left_x, int &right_x , Mat frame, unsigned int &zero_count)
+ double TargetLane::steer_control(Mat denoise, int height_percent, int judging_line, Mat frame, unsigned int &zero_count)
  {
 
 
@@ -125,6 +125,8 @@ cv::Mat TargetLane::mask(cv::Mat frame) {
 
  	int left_sum_x = 0;
  	int right_sum_x = 0;
+	int left_x =0;
+	int right_x = denoise.cols;
 
  	int line_height = denoise.rows * height_percent / 100.0;
 
@@ -155,11 +157,11 @@ cv::Mat TargetLane::mask(cv::Mat frame) {
  	line(denoise, Point(2, line_height), Point(denoise.cols, line_height), Scalar(0, 255, 255), 5);
  	line(denoise, Point(denoise.cols - 2, line_height), Point(denoise.cols * 2 / 3.0, line_height), Scalar(255, 255, 255), 5);
 
- 	if (!(left_x_num == 0)&&(left_x_num > 100))
+ 	if (left_x_num > 100)
  	{
  		left_x = left_sum_x / left_x_num;
  	}
- 	if (!(right_x_num == 0) && (right_x_num > 100))
+ 	if (right_x_num > 100)
  	{
  		right_x = right_sum_x / right_x_num;
  	}
@@ -174,7 +176,8 @@ cv::Mat TargetLane::mask(cv::Mat frame) {
 
 
  	double angle = atan2(middle - denoise.cols / 2, denoise.rows - line_height) * 180 / PI;
-	if(angle > 23){
+	
+if(angle > 23){
 		angle = 23;
 	}
 	else if(angle < -23){

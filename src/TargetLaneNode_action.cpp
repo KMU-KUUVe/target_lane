@@ -52,6 +52,7 @@ void TargetLaneNode::imageCallback(const sensor_msgs::ImageConstPtr& image)
 		steer_control_value = laneDetecting();
 		car_tracking::car_trackingFeedback feedback;
 		feedback.tracking_feedback = steer_control_value; //feedback name is steer and type should be double.
+		ROS_INFO("steering in target_lane: %d", steer_control_value);
 		as_.publishFeedback(feedback);
 	}
 }
@@ -67,8 +68,6 @@ int TargetLaneNode::laneDetecting()
 {
 	int ncols = frame.cols;
 	int nrows = frame.rows;
-	int left_x =0;
-	int right_x =frame.cols;
 	unsigned int zero_count = 0;
 
 	int64 t1 = getTickCount();
@@ -82,15 +81,23 @@ int TargetLaneNode::laneDetecting()
 	img_denoise = targetlane.deNoise(img_mask2);
 	//imshow("img_denoise", img_denoise);
 
-	double angle = targetlane.steer_control(img_denoise, steer_height, 12, left_x, right_x, img_mask, zero_count);
+	double angle = targetlane.steer_control(img_denoise, steer_height, 12, img_mask, zero_count);
 	
 	int64 t2 = getTickCount();
 	double ms = (t2 - t1) * 1000 / getTickFrequency();
 	sum += ms;
 	avg = sum / (double)frame_count;
 	waitKey(3);
+	
+	angle = angle * angle_factor_;
+	
+	if(angle <= 0){
+		angle = angle - 5;
+	}
 
-	return angle * angle_factor_;
+
+
+	return angle;
 }
 
 
