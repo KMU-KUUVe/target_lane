@@ -39,7 +39,7 @@ void TargetLane::filter_colors(Mat _img_bgr, Mat &img_filtered)
 	Mat thre, grayy;
 
 	cvtColor(img_bgr, grayy, COLOR_BGR2GRAY);
-	cv::threshold(grayy, thre, 180, 255, cv::THRESH_BINARY);
+	cv::threshold(grayy, thre, 160, 255, cv::THRESH_BINARY);
 	imshow("thre....", thre);
 
 	/*

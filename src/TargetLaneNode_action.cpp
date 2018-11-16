@@ -92,7 +92,7 @@ int TargetLaneNode::laneDetecting()
 	angle = angle * angle_factor_;
 	
 	if(angle <= 0){
-		angle = angle - 5;
+		angle = angle - 4;
 	}
 
 
